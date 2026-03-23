@@ -1,21 +1,21 @@
+/* ── Design tokens ──────────────────────────────────────── */
 :root {
-  --bg: #071019;
-  --bg-2: #0d1724;
-  --panel: #111d2c;
+  --bg:      #071019;
+  --bg-2:    #0d1724;
+  --panel:   #111d2c;
   --panel-2: #172538;
-  --border: #22354d;
-  --text: #e8eef6;
-  --muted: #9db0c6;
-  --accent: #d4af37;
-  --silver: #c0c0c0;
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  --radius: 18px;
-  --gap: 20px;
+  --border:  #22354d;
+  --text:    #e8eef6;
+  --muted:   #9db0c6;
+  --accent:  #d4af37;
+  --silver:  #c0c0c0;
+  --shadow:  0 10px 30px rgba(0, 0, 0, 0.25);
+  --radius:  18px;
+  --gap:     20px;
 }
 
-* {
-  box-sizing: border-box;
-}
+/* ── Reset ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
 html, body {
   margin: 0;
@@ -23,12 +23,10 @@ html, body {
   background: var(--bg);
   color: var(--text);
   font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
   min-height: 100vh;
 }
 
+/* ── Top bar ────────────────────────────────────────────── */
 .topbar {
   padding: 24px 20px 18px;
   border-bottom: 1px solid var(--border);
@@ -50,20 +48,34 @@ body {
   font-size: 1rem;
 }
 
+/* ── Main layout ────────────────────────────────────────── */
+/*
+  Single-column layout with explicit full-width sections.
+  Charts must be full-width so they have enough room to be tall.
+  A 2-col chart grid makes each panel too narrow to be readable.
+*/
 .dashboard {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: var(--gap);
   padding: 20px;
 }
 
+/* Price ticker row — side by side */
 .top-cards {
-  grid-column: 1 / -1;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--gap);
 }
 
+/* Chart row — side by side, each with a proper tall height */
+.chart-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+}
+
+/* ── Cards and panels ───────────────────────────────────── */
 .card,
 .panel {
   background: var(--panel);
@@ -95,22 +107,54 @@ body {
   font-size: 1.05rem;
 }
 
+/* ── Widget containers ──────────────────────────────────── */
+/*
+  CRITICAL: TradingView advanced-chart with autosize:true fills its
+  parent's HEIGHT. The parent MUST have an explicit height (not just
+  min-height) or the chart collapses to 0 px.
+
+  Chart height = viewport-ish square feel.
+  We use a padding-top aspect-ratio trick for charts so they scale
+  proportionally on any screen width.
+*/
 .widget-box {
   width: 100%;
+  display: block;
 }
 
+/* Ticker cards: fixed height is fine */
 .widget-short {
-  min-height: 110px;
+  height: 130px;
 }
 
+/* Charts: use an intrinsic aspect ratio wrapper instead of fixed px */
 .widget-tall {
-  min-height: 520px;
+  position: relative;
+  width: 100%;
+  padding-top: 70%;   /* height = 70% of the panel's width → near-square */
 }
 
-.cameras-panel {
-  grid-column: 1 / -1;
+/* The TradingView container must fill the aspect-ratio box absolutely */
+.widget-tall .tradingview-widget-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
+.tradingview-widget-container {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tradingview-widget-container__widget {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── Camera panels ──────────────────────────────────────── */
 .camera-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -123,7 +167,6 @@ body {
   border: 1px solid var(--border);
   border-radius: 14px;
   overflow: hidden;
-  min-height: 290px;
   display: flex;
   flex-direction: column;
 }
@@ -136,11 +179,13 @@ body {
   background: rgba(255, 255, 255, 0.02);
 }
 
+/* 16:9 aspect-ratio wrapper */
 .camera-frame-wrap {
   position: relative;
   width: 100%;
   padding-top: 56.25%;
   background: #05090e;
+  flex: 1;
 }
 
 .camera-frame-wrap iframe,
@@ -170,11 +215,19 @@ body {
   line-height: 1.45;
 }
 
+/* ── Footer ─────────────────────────────────────────────── */
 .footer {
   padding: 10px 20px 28px;
   color: var(--muted);
   font-size: 0.85rem;
 }
+
+.footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.footer a:hover { text-decoration: underline; }
 
 code {
   color: #d7e6ff;
@@ -183,18 +236,10 @@ code {
   border-radius: 5px;
 }
 
-.tradingview-widget-container,
-.tradingview-widget-container__widget {
-  width: 100%;
-  height: 100%;
-}
-
-@media (max-width: 1100px) {
-  .dashboard {
-    grid-template-columns: 1fr;
-  }
-
-  .top-cards {
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .top-cards,
+  .chart-row {
     grid-template-columns: 1fr;
   }
 
@@ -202,7 +247,8 @@ code {
     grid-template-columns: 1fr;
   }
 
+  /* On narrow screens let chart height be a bit taller */
   .widget-tall {
-    min-height: 460px;
+    padding-top: 80%;
   }
 }

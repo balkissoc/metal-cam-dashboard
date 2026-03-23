@@ -1,48 +1,103 @@
+/*
+  config.js — Jimmy's Dashboard
+  ─────────────────────────────
+  All user-configurable values live here.
+  YouTube IDs sourced from worldmonitor.app open-source repo (verified Feb 2026).
+
+  CAMERA ENTRY FORMAT
+  ───────────────────
+  YouTube live stream:
+  {
+    title: "Sydney Harbour",
+    type:  "youtube",
+    id:    "VIDEO_ID",    ← 11-char ID from youtube.com/watch?v=VIDEO_ID
+    note:  "Optional caption."
+  }
+
+  Direct iframe embed:
+  {
+    title: "Custom feed",
+    type:  "iframe",
+    src:   "https://provider.example/embed/cam123",
+    note:  "Optional caption."
+  }
+*/
+
 window.APP_CONFIG = {
-  siteTitle: "Jimmy's Dashboard",
-  siteSubtitle: "Gold and silver in AUD, with live cameras in Australia, Iran and the USA",
+
+  siteTitle:    "Jimmy's Dashboard",
+  siteSubtitle: "Gold and silver in AUD · Live cameras worldwide",
 
   symbols: {
-    gold: "OANDA:XAUAUD",
+    gold:   "OANDA:XAUAUD",
     silver: "OANDA:XAGAUD"
   },
 
   cameras: {
-    australia: [
-      /*
-      Example YouTube live stream:
-      {
-        title: "Sydney Harbour",
-        type: "youtube",
-        id: "YOUTUBE_VIDEO_ID",
-        note: "Use only a live stream that you have tested and that permits embedding."
-      }
 
-      Example direct iframe source:
+    australia: [
       {
-        title: "Sydney CBD",
-        type: "iframe",
-        src: "https://provider.example/embed/camera123",
-        note: "Use only provider URLs that explicitly allow embedding."
+        title: "Sydney — Harbour Bridge & Opera House (24/7)",
+        type:  "youtube",
+        id:    "7pcL-0Wo77U",
+        note:  "WebcamSydney — 24/7 live view of the Harbour Bridge and Opera House."
+      },
+      {
+        title: "Sydney — 180° Panning Harbour View",
+        type:  "youtube",
+        id:    "jshwkG1ZpP8",
+        note:  "WebcamSydney 2 — slow 180-degree panning view of Sydney Harbour."
+      },
+      {
+        title: "ISS Earth View (NASA Live)",
+        type:  "youtube",
+        id:    "vytmBNhc9ig",
+        note:  "NASA International Space Station live Earth view feed."
       }
-      */
     ],
+
     iran: [
-      /*
-      Iran embeds are often less stable and harder to source reliably.
-      Add only tested embeddable sources here.
-      */
-    ],
-    usa: [
-      /*
-      Example:
       {
-        title: "Times Square",
-        type: "youtube",
-        id: "YOUTUBE_VIDEO_ID",
-        note: "Use only a tested embeddable stream."
+        title: "Tehran — Live HD Cameras",
+        type:  "youtube",
+        id:    "-zGuR1qVKrU",
+        note:  "Real-time HD views from across Tehran and Iran."
+      },
+      {
+        title: "Jerusalem — Live Skyline",
+        type:  "youtube",
+        id:    "fIurYTprwzg",
+        note:  "Jerusalem Live — continuous skyline view."
+      },
+      {
+        title: "Middle East — Multi-Stream",
+        type:  "youtube",
+        id:    "Khfdb7qUvjk",
+        note:  "Multi-source HD feeds from across the Middle East region."
       }
-      */
+    ],
+
+    usa: [
+      {
+        title: "New York — Times Square (EarthCam)",
+        type:  "youtube",
+        id:    "4qyZLflp-sI",
+        note:  "EarthCam — live view from 1560 Broadway, Times Square."
+      },
+      {
+        title: "Washington DC — Live Cam",
+        type:  "youtube",
+        id:    "1wV9lLe14aU",
+        note:  "Axis Communications — live Washington DC camera."
+      },
+      {
+        title: "Los Angeles — Live Cam",
+        type:  "youtube",
+        id:    "EO_1LWqsCNE",
+        note:  "Venice Beach Hotel live view of Los Angeles."
+      }
     ]
+
   }
+
 };

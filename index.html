@@ -4,70 +4,74 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jimmy's Dashboard</title>
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self';
+             script-src 'self' 'unsafe-inline' https://s3.tradingview.com;
+             frame-src https://www.youtube.com https://www.tradingview.com;
+             style-src 'self' 'unsafe-inline';
+             img-src 'self' data: https:;
+             connect-src 'self' https://www.tradingview.com;">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
   <header class="topbar">
     <div class="title-wrap">
       <h1 id="siteTitle">Jimmy's Dashboard</h1>
-      <p id="siteSubtitle" class="subtitle">
-        Gold and silver in AUD, with live cameras in Australia, Iran and the USA
-      </p>
+      <p id="siteSubtitle" class="subtitle">Gold and silver in AUD · Live cameras worldwide</p>
     </div>
   </header>
 
   <main class="dashboard">
-    <section class="top-cards">
+
+    <!-- ── Price tickers ──────────────────────────────────── -->
+    <div class="top-cards">
       <div class="card">
         <div class="card-title">Gold (AUD)</div>
         <div id="goldTicker" class="widget-box widget-short"></div>
       </div>
-
       <div class="card">
         <div class="card-title">Silver (AUD)</div>
         <div id="silverTicker" class="widget-box widget-short"></div>
       </div>
-    </section>
+    </div>
 
-    <section class="panel">
-      <div class="panel-header">
-        <h2>Gold Price Chart (AUD)</h2>
+    <!-- ── Charts — side by side, properly tall ───────────── -->
+    <div class="chart-row">
+      <div class="panel">
+        <div class="panel-header"><h2>Gold Price Chart (AUD)</h2></div>
+        <div id="goldChart" class="widget-box widget-tall"></div>
       </div>
-      <div id="goldChart" class="widget-box widget-tall"></div>
-    </section>
+      <div class="panel">
+        <div class="panel-header"><h2>Silver Price Chart (AUD)</h2></div>
+        <div id="silverChart" class="widget-box widget-tall"></div>
+      </div>
+    </div>
 
-    <section class="panel">
-      <div class="panel-header">
-        <h2>Silver Price Chart (AUD)</h2>
-      </div>
-      <div id="silverChart" class="widget-box widget-tall"></div>
-    </section>
-
-    <section class="panel cameras-panel">
-      <div class="panel-header">
-        <h2>Australia Cameras</h2>
-      </div>
+    <!-- ── Camera panels ──────────────────────────────────── -->
+    <div class="panel">
+      <div class="panel-header"><h2>Australia Cameras</h2></div>
       <div id="camsAustralia" class="camera-grid"></div>
-    </section>
+    </div>
 
-    <section class="panel cameras-panel">
-      <div class="panel-header">
-        <h2>Iran Cameras</h2>
-      </div>
+    <div class="panel">
+      <div class="panel-header"><h2>Iran &amp; Middle East Cameras</h2></div>
       <div id="camsIran" class="camera-grid"></div>
-    </section>
+    </div>
 
-    <section class="panel cameras-panel">
-      <div class="panel-header">
-        <h2>USA Cameras</h2>
-      </div>
+    <div class="panel">
+      <div class="panel-header"><h2>USA Cameras</h2></div>
       <div id="camsUSA" class="camera-grid"></div>
-    </section>
+    </div>
+
   </main>
 
   <footer class="footer">
     <p>
-      Charts and price widgets use TradingView embeds. Camera panels require manually verified embeddable sources in <code>config.js</code>.
+      Price and chart widgets powered by
+      <a href="https://www.tradingview.com" target="_blank" rel="noopener">TradingView</a>.
+      Camera feeds are public YouTube live streams. IDs sourced from
+      <a href="https://github.com/koala73/worldmonitor" target="_blank" rel="noopener">worldmonitor</a>.
     </p>
   </footer>
 
