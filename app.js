@@ -165,22 +165,22 @@
       Object.assign({}, chartBase, { symbol: symbols.silver || "OANDA:XAGAUD" })
     );
 
-    /* S&P 500 chart */
+    /* S&P 500 chart — FOREXCOM:SPXUSD is the most reliably embeddable SPX symbol */
     injectTVWidget(
       "spxChart",
       "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js",
       Object.assign({}, chartBase, {
-        symbol:   "SP:SPX",
+        symbol:   "FOREXCOM:SPXUSD",
         timezone: "America/New_York"
       })
     );
 
-    /* Crude Oil (WTI) chart — NYMEX:CL1! is the front-month futures contract */
+    /* Crude Oil (WTI) — OANDA:WTICOUSD is reliable in embed widgets */
     injectTVWidget(
       "oilChart",
       "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js",
       Object.assign({}, chartBase, {
-        symbol:   "NYMEX:CL1!",
+        symbol:   "OANDA:WTICOUSD",
         timezone: "America/New_York"
       })
     );

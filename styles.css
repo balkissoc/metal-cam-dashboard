@@ -100,9 +100,9 @@ html, body {
   gap: var(--gap);
 }
 
-/* Three equal-width charts */
-.chart-row-3 {
-  grid-template-columns: 1fr 1fr 1fr;
+/* Three equal-width charts — overrides the 2-col default */
+.chart-row.chart-row-3 {
+  grid-template-columns: repeat(3, 1fr);
 }
 
 /* ── Cards / panels ─────────────────────────────────────── */
@@ -240,7 +240,7 @@ html, body {
 
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .top-cards, .chart-row, .chart-row-3 { grid-template-columns: 1fr; }
+  .top-cards, .chart-row, .chart-row.chart-row-3 { grid-template-columns: 1fr; }
   .camera-grid { grid-template-columns: 1fr; }
   .widget-tall { height: 400px; }
   .news-panel  { height: 400px; }
