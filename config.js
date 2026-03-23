@@ -12,6 +12,12 @@ window.APP_CONFIG = {
 
     australia: [
       {
+        title: "Perth — Mt Lawley (St John of God Hospital, 24/7)",
+        type:  "youtube",
+        id:    "uakxJIafWcw",
+        note:  "Continuous live street view of Mt Lawley, Perth, Western Australia."
+      },
+      {
         title: "Sydney — Harbour Bridge & Opera House (24/7)",
         type:  "youtube",
         id:    "7pcL-0Wo77U",
@@ -22,12 +28,6 @@ window.APP_CONFIG = {
         type:  "youtube",
         id:    "jshwkG1ZpP8",
         note:  "WebcamSydney 2 — slow 180-degree panning view of Sydney Harbour."
-      },
-      {
-        title: "ISS Earth View (NASA Live)",
-        type:  "youtube",
-        id:    "vytmBNhc9ig",
-        note:  "NASA ISS — live Earth view from the International Space Station."
       }
     ],
 
