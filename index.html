@@ -1,21 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-AU">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Jimmy's Dashboard</title>
-
-  <!-- TradingView Lightweight Charts -->
-  <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
-
-  <!-- Styles -->
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-
-  <!-- ===== TOP BANNER ===== -->
   <header class="topbar">
     <div class="title-wrap">
       <h1 id="siteTitle">Jimmy's Dashboard</h1>
@@ -23,45 +14,35 @@
         Gold and silver in AUD, with live cameras in Australia, Iran and the USA
       </p>
     </div>
-
-    <div class="status-wrap">
-      <div class="status-card">
-        <span class="label">Gold (AUD/oz)</span>
-        <span id="goldSpot" class="value">Loading...</span>
-      </div>
-
-      <div class="status-card">
-        <span class="label">Silver (AUD/oz)</span>
-        <span id="silverSpot" class="value">Loading...</span>
-      </div>
-
-      <div class="status-card">
-        <span class="label">Last update</span>
-        <span id="lastUpdate" class="value">-</span>
-      </div>
-    </div>
   </header>
 
-  <!-- ===== MAIN DASHBOARD ===== -->
   <main class="dashboard">
+    <section class="top-cards">
+      <div class="card">
+        <div class="card-title">Gold (AUD)</div>
+        <div id="goldTicker" class="widget-box widget-short"></div>
+      </div>
 
-    <!-- GOLD CHART -->
+      <div class="card">
+        <div class="card-title">Silver (AUD)</div>
+        <div id="silverTicker" class="widget-box widget-short"></div>
+      </div>
+    </section>
+
     <section class="panel">
       <div class="panel-header">
         <h2>Gold Price Chart (AUD)</h2>
       </div>
-      <div id="goldChart" class="chart-box"></div>
+      <div id="goldChart" class="widget-box widget-tall"></div>
     </section>
 
-    <!-- SILVER CHART -->
     <section class="panel">
       <div class="panel-header">
         <h2>Silver Price Chart (AUD)</h2>
       </div>
-      <div id="silverChart" class="chart-box"></div>
+      <div id="silverChart" class="widget-box widget-tall"></div>
     </section>
 
-    <!-- AUSTRALIA CAMERAS -->
     <section class="panel cameras-panel">
       <div class="panel-header">
         <h2>Australia Cameras</h2>
@@ -69,7 +50,6 @@
       <div id="camsAustralia" class="camera-grid"></div>
     </section>
 
-    <!-- IRAN CAMERAS -->
     <section class="panel cameras-panel">
       <div class="panel-header">
         <h2>Iran Cameras</h2>
@@ -77,29 +57,21 @@
       <div id="camsIran" class="camera-grid"></div>
     </section>
 
-    <!-- USA CAMERAS -->
     <section class="panel cameras-panel">
       <div class="panel-header">
         <h2>USA Cameras</h2>
       </div>
       <div id="camsUSA" class="camera-grid"></div>
     </section>
-
   </main>
 
-  <!-- ===== FOOTER ===== -->
   <footer class="footer">
     <p>
-      Charts by 
-      <a href="https://www.tradingview.com/" target="_blank">
-        TradingView Lightweight Charts
-      </a>
+      Charts and price widgets use TradingView embeds. Camera panels require manually verified embeddable sources in <code>config.js</code>.
     </p>
   </footer>
 
-  <!-- ===== SCRIPTS ===== -->
   <script src="config.js"></script>
   <script src="app.js"></script>
-
 </body>
 </html>
