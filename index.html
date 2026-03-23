@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gold, Silver & Live Cameras Dashboard</title>
+
+  <script
+    type="text/javascript"
+    src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js">
+  </script>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Gold, Silver & Live Cameras Dashboard</h1>
+      <p class="subtitle">Gold and silver in AUD, with live cameras in Australia, Iran and the USA</p>
+    </div>
+    <div class="status-wrap">
+      <div class="status-card">
+        <span class="label">Gold (AUD/oz)</span>
+        <span id="goldSpot" class="value">Loading...</span>
+      </div>
+      <div class="status-card">
+        <span class="label">Silver (AUD/oz)</span>
+        <span id="silverSpot" class="value">Loading...</span>
+      </div>
+      <div class="status-card">
+        <span class="label">Last update</span>
+        <span id="lastUpdate" class="value">-</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <section class="panel charts-panel">
+      <div class="panel-header">
+        <h2>Gold Price Chart (AUD)</h2>
+      </div>
+      <div id="goldChart" class="chart-box"></div>
+    </section>
+
+    <section class="panel charts-panel">
+      <div class="panel-header">
+        <h2>Silver Price Chart (AUD)</h2>
+      </div>
+      <div id="silverChart" class="chart-box"></div>
+    </section>
+
+    <section class="panel cameras-panel">
+      <div class="panel-header">
+        <h2>Australia Cameras</h2>
+      </div>
+      <div id="camsAustralia" class="camera-grid"></div>
+    </section>
+
+    <section class="panel cameras-panel">
+      <div class="panel-header">
+        <h2>Iran Cameras</h2>
+      </div>
+      <div id="camsIran" class="camera-grid"></div>
+    </section>
+
+    <section class="panel cameras-panel">
+      <div class="panel-header">
+        <h2>USA Cameras</h2>
+      </div>
+      <div id="camsUSA" class="camera-grid"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>
+      Market charts powered by Lightweight Charts. Add TradingView attribution on the page footer or About section before publishing.
+    </p>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
