@@ -1,28 +1,3 @@
-/*
-  config.js — Jimmy's Dashboard
-  ─────────────────────────────
-  All user-configurable values live here.
-  YouTube IDs sourced from worldmonitor.app open-source repo (verified Feb 2026).
-
-  CAMERA ENTRY FORMAT
-  ───────────────────
-  YouTube live stream:
-  {
-    title: "Sydney Harbour",
-    type:  "youtube",
-    id:    "VIDEO_ID",    ← 11-char ID from youtube.com/watch?v=VIDEO_ID
-    note:  "Optional caption."
-  }
-
-  Direct iframe embed:
-  {
-    title: "Custom feed",
-    type:  "iframe",
-    src:   "https://provider.example/embed/cam123",
-    note:  "Optional caption."
-  }
-*/
-
 window.APP_CONFIG = {
 
   siteTitle:    "Jimmy's Dashboard",
@@ -52,7 +27,7 @@ window.APP_CONFIG = {
         title: "ISS Earth View (NASA Live)",
         type:  "youtube",
         id:    "vytmBNhc9ig",
-        note:  "NASA International Space Station live Earth view feed."
+        note:  "NASA ISS — live Earth view from the International Space Station."
       }
     ],
 

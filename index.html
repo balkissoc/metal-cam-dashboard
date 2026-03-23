@@ -5,12 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jimmy's Dashboard</title>
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self';
-             script-src 'self' 'unsafe-inline' https://s3.tradingview.com;
-             frame-src https://www.youtube.com https://www.tradingview.com;
-             style-src 'self' 'unsafe-inline';
-             img-src 'self' data: https:;
-             connect-src 'self' https://www.tradingview.com;">
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' https://s3.tradingview.com; frame-src https://www.youtube.com https://www.tradingview.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.tradingview.com;">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -24,7 +19,6 @@
 
   <main class="dashboard">
 
-    <!-- ── Price tickers ──────────────────────────────────── -->
     <div class="top-cards">
       <div class="card">
         <div class="card-title">Gold (AUD)</div>
@@ -36,7 +30,6 @@
       </div>
     </div>
 
-    <!-- ── Charts — side by side, properly tall ───────────── -->
     <div class="chart-row">
       <div class="panel">
         <div class="panel-header"><h2>Gold Price Chart (AUD)</h2></div>
@@ -48,7 +41,6 @@
       </div>
     </div>
 
-    <!-- ── Camera panels ──────────────────────────────────── -->
     <div class="panel">
       <div class="panel-header"><h2>Australia Cameras</h2></div>
       <div id="camsAustralia" class="camera-grid"></div>
@@ -68,10 +60,8 @@
 
   <footer class="footer">
     <p>
-      Price and chart widgets powered by
-      <a href="https://www.tradingview.com" target="_blank" rel="noopener">TradingView</a>.
-      Camera feeds are public YouTube live streams. IDs sourced from
-      <a href="https://github.com/koala73/worldmonitor" target="_blank" rel="noopener">worldmonitor</a>.
+      Charts and prices by <a href="https://www.tradingview.com" target="_blank" rel="noopener">TradingView</a>.
+      Camera feeds are public YouTube live streams.
     </p>
   </footer>
 
