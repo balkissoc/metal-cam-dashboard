@@ -1,16 +1,48 @@
 window.APP_CONFIG = {
-  refreshMs: 60000,
+  siteTitle: "Jimmy's Dashboard",
+  siteSubtitle: "Gold and silver in AUD, with live cameras in Australia, Iran and the USA",
+
+  symbols: {
+    gold: "OANDA:XAUAUD",
+    silver: "OANDA:XAGAUD"
+  },
 
   cameras: {
     australia: [
-      { title: "Sydney Harbour", youtubeId: "21X5lGlDOfg" },
-      { title: "Bondi Beach", youtubeId: "m6g8Gf6cE2E" }
+      /*
+      Example YouTube live stream:
+      {
+        title: "Sydney Harbour",
+        type: "youtube",
+        id: "YOUTUBE_VIDEO_ID",
+        note: "Use only a live stream that you have tested and that permits embedding."
+      }
+
+      Example direct iframe source:
+      {
+        title: "Sydney CBD",
+        type: "iframe",
+        src: "https://provider.example/embed/camera123",
+        note: "Use only provider URLs that explicitly allow embedding."
+      }
+      */
     ],
     iran: [
-      { title: "Tehran", youtubeId: "gCNeDWCI0vo" }
+      /*
+      Iran embeds are often less stable and harder to source reliably.
+      Add only tested embeddable sources here.
+      */
     ],
     usa: [
-      { title: "Times Square", youtubeId: "1-iS7LArMPA" }
+      /*
+      Example:
+      {
+        title: "Times Square",
+        type: "youtube",
+        id: "YOUTUBE_VIDEO_ID",
+        note: "Use only a tested embeddable stream."
+      }
+      */
     ]
   }
 };
