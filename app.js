@@ -14,7 +14,8 @@
   /* ── TradingView widget injection ────────────────────── */
   /*
     CRITICAL: script.innerHTML not script.text
-    TradingView widget scripts parse config from their own innerHTML.
+    TradingView widget scripts parse their config from their own innerHTML.
+    Using .text silently passes no config — widget renders blank.
   */
   function injectTVWidget(targetId, scriptSrc, config) {
     var target = document.getElementById(targetId);
@@ -33,9 +34,9 @@
     widget.style.height = "100%";
 
     var script = document.createElement("script");
-    script.type    = "text/javascript";
-    script.src     = scriptSrc;
-    script.async   = true;
+    script.type      = "text/javascript";
+    script.src       = scriptSrc;
+    script.async     = true;
     script.innerHTML = JSON.stringify(config);
 
     container.appendChild(widget);
@@ -46,68 +47,32 @@
   /* ── Market widgets ──────────────────────────────────── */
   function renderMarketWidgets() {
 
-    /* --- Tickers: use symbol-overview widget (more reliable than single-quote) --- */
+    /* Tickers — single-quote widget, one price card per symbol */
     injectTVWidget(
       "goldTicker",
-      "https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js",
+      "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js",
       {
-        symbols:       [["Gold (AUD)", symbols.gold || "OANDA:XAUAUD|1D"]],
-        chartOnly:     false,
+        symbol:        symbols.gold || "OANDA:XAUAUD",
         width:         "100%",
-        height:        "100%",
-        locale:        "en",
+        isTransparent: true,
         colorTheme:    "dark",
-        autosize:      true,
-        showVolume:    false,
-        showMA:        false,
-        hideDateRanges: false,
-        hideMarketStatus: false,
-        hideSymbolLogo: false,
-        scalePosition: "right",
-        scaleMode:     "Normal",
-        fontFamily:    "Arial, sans-serif",
-        fontSize:      "10",
-        noTimeScale:   false,
-        valuesTracking: "1",
-        changeMode:    "price-and-percent",
-        chartType:     "area",
-        lineWidth:     2,
-        lineType:      0,
-        dateRanges:    ["1d|1", "1m|30", "3m|60", "12m|1D", "60m|1W", "all|1M"]
+        locale:        "en"
       }
     );
 
     injectTVWidget(
       "silverTicker",
-      "https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js",
+      "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js",
       {
-        symbols:       [["Silver (AUD)", symbols.silver || "OANDA:XAGAUD|1D"]],
-        chartOnly:     false,
+        symbol:        symbols.silver || "OANDA:XAGAUD",
         width:         "100%",
-        height:        "100%",
-        locale:        "en",
+        isTransparent: true,
         colorTheme:    "dark",
-        autosize:      true,
-        showVolume:    false,
-        showMA:        false,
-        hideDateRanges: false,
-        hideMarketStatus: false,
-        hideSymbolLogo: false,
-        scalePosition: "right",
-        scaleMode:     "Normal",
-        fontFamily:    "Arial, sans-serif",
-        fontSize:      "10",
-        noTimeScale:   false,
-        valuesTracking: "1",
-        changeMode:    "price-and-percent",
-        chartType:     "area",
-        lineWidth:     2,
-        lineType:      0,
-        dateRanges:    ["1d|1", "1m|30", "3m|60", "12m|1D", "60m|1W", "all|1M"]
+        locale:        "en"
       }
     );
 
-    /* --- Charts: hardcoded 600px height — most reliable cross-browser approach --- */
+    /* Charts — advanced-chart, explicit 600px height, autosize:false */
     injectTVWidget(
       "goldChart",
       "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js",
