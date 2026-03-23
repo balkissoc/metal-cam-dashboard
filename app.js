@@ -165,13 +165,23 @@
       Object.assign({}, chartBase, { symbol: symbols.silver || "OANDA:XAGAUD" })
     );
 
-    /* Crude Oil chart (USD) */
+    /* S&P 500 chart */
+    injectTVWidget(
+      "spxChart",
+      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js",
+      Object.assign({}, chartBase, {
+        symbol:   "SP:SPX",
+        timezone: "America/New_York"
+      })
+    );
+
+    /* Crude Oil (WTI) chart — NYMEX:CL1! is the front-month futures contract */
     injectTVWidget(
       "oilChart",
       "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js",
       Object.assign({}, chartBase, {
-        symbol:   "TVC:USOIL",
-        timezone: "UTC"    /* Oil trades globally — UTC makes more sense than Perth */
+        symbol:   "NYMEX:CL1!",
+        timezone: "America/New_York"
       })
     );
   }
