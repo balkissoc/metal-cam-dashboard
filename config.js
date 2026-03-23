@@ -18,10 +18,10 @@ window.APP_CONFIG = {
         note:  "Continuous live street view of Mt Lawley, Perth, Western Australia."
       },
       {
-        title: "Sydney — Harbour Bridge & Opera House (24/7)",
+        title: "Bangkok — Sathorn Road Skywalk (24/7 4K)",
         type:  "youtube",
-        id:    "7pcL-0Wo77U",
-        note:  "WebcamSydney — 24/7 live view of the Harbour Bridge and Opera House."
+        id:    "uDV_qKiXRVU",
+        note:  "24/7 live view of Bangkok's financial district, Sathorn Road, Thailand."
       },
       {
         title: "Sydney — 180° Panning Harbour View",

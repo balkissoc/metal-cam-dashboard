@@ -31,6 +31,18 @@ html, body {
 .title-wrap h1 { margin: 0 0 6px; font-size: 2.2rem; line-height: 1.1; }
 .subtitle { margin: 0; color: var(--muted); font-size: 1rem; }
 
+/* ── News ticker bar ─────────────────────────────────────── */
+/* Scrolling ticker tape of key instruments sits just below the header */
+.news-bar {
+  background: #060f18;
+  border-bottom: 1px solid var(--border);
+  height: 46px;
+  overflow: hidden;
+}
+.news-bar .tradingview-widget-container {
+  height: 46px !important;
+}
+
 /* ── Layout ─────────────────────────────────────────────── */
 .dashboard {
   display: flex;
@@ -39,14 +51,12 @@ html, body {
   padding: 20px;
 }
 
-/* Tickers — side by side */
 .top-cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--gap);
 }
 
-/* Charts — side by side */
 .chart-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -70,33 +80,30 @@ html, body {
 .panel-header h2 { margin: 0; font-size: 1.05rem; }
 
 /* ── Ticker widgets ─────────────────────────────────────── */
-/*
-  symbol-overview widget needs ~220px to render the mini-chart + price.
-  Give it an explicit height so the widget has something to fill.
-*/
 .widget-short {
   width: 100%;
-  height: 220px;
+  height: 160px;
   display: block;
 }
 
 /* ── Chart widgets ──────────────────────────────────────── */
-/*
-  Hardcoded 600px height passed to widget config (autosize:false).
-  The container must also be 600px so the widget fills it.
-*/
 .widget-tall {
   width: 100%;
   height: 600px;
   display: block;
 }
 
-/* TradingView containers must fill their host exactly */
 .tradingview-widget-container,
 .tradingview-widget-container__widget {
   width: 100% !important;
   height: 100% !important;
   display: block;
+}
+
+/* ── News panel ─────────────────────────────────────────── */
+.news-panel {
+  width: 100%;
+  height: 500px;
 }
 
 /* ── Camera panels ──────────────────────────────────────── */
@@ -119,7 +126,6 @@ html, body {
   border-bottom: 1px solid var(--border);
   background: rgba(255,255,255,0.02);
 }
-/* 16:9 aspect ratio wrapper */
 .camera-frame-wrap {
   position: relative;
   width: 100%;
@@ -147,4 +153,5 @@ html, body {
   .top-cards, .chart-row { grid-template-columns: 1fr; }
   .camera-grid { grid-template-columns: 1fr; }
   .widget-tall { height: 400px; }
+  .news-panel  { height: 400px; }
 }
