@@ -1,254 +1,112 @@
-const REFRESH_MS = window.APP_CONFIG?.refreshMs ?? 60000;
-const SITE_TITLE = window.APP_CONFIG?.siteTitle ?? "Jimmy's Dashboard";
-const SITE_SUBTITLE =
-  window.APP_CONFIG?.siteSubtitle ??
-  "Gold and silver in AUD, with live cameras in Australia, Iran and the USA";
-
 const goldSpotEl = document.getElementById("goldSpot");
 const silverSpotEl = document.getElementById("silverSpot");
 const lastUpdateEl = document.getElementById("lastUpdate");
 
-const siteTitleEl = document.getElementById("siteTitle");
-const siteSubtitleEl = document.getElementById("siteSubtitle");
+let goldSeries;
+let silverSeries;
 
-let goldSeries = null;
-let silverSeries = null;
-
-function setBanner() {
-  if (siteTitleEl) siteTitleEl.textContent = SITE_TITLE;
-  if (siteSubtitleEl) siteSubtitleEl.textContent = SITE_SUBTITLE;
-}
-
+// ===== FORMAT =====
 function formatAud(value) {
-  if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
   return new Intl.NumberFormat("en-AU", {
     style: "currency",
-    currency: "AUD",
-    maximumFractionDigits: 2
-  }).format(Number(value));
+    currency: "AUD"
+  }).format(value);
 }
 
-function formatDateTime(dateValue) {
-  const d = new Date(dateValue);
-  return d.toLocaleString("en-AU", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
-}
-
-function setTopStatusError(message = "Error") {
-  if (goldSpotEl) goldSpotEl.textContent = message;
-  if (silverSpotEl) silverSpotEl.textContent = message;
-  if (lastUpdateEl) lastUpdateEl.textContent = "Check console";
-}
-
-function buildChart(containerId, lineColour) {
-  const container = document.getElementById(containerId);
-
-  const chart = LightweightCharts.createChart(container, {
-    layout: {
-      background: { color: "#121923" },
-      textColor: "#e8eef6"
-    },
-    grid: {
-      vertLines: { color: "#1f2a38" },
-      horzLines: { color: "#1f2a38" }
-    },
-    rightPriceScale: {
-      borderColor: "#253142"
-    },
-    timeScale: {
-      borderColor: "#253142",
-      timeVisible: true,
-      secondsVisible: false
-    },
-    width: container.clientWidth,
-    height: 420
-  });
-
-  const series = chart.addAreaSeries({
-    lineColor: lineColour,
-    topColor: `${lineColour}55`,
-    bottomColor: `${lineColour}08`,
-    lineWidth: 2,
-    priceFormat: {
-      type: "price",
-      precision: 2,
-      minMove: 0.01
+// ===== CHART =====
+function buildChart(containerId, color) {
+  const chart = LightweightCharts.createChart(
+    document.getElementById(containerId),
+    {
+      layout: { background: { color: "#121923" }, textColor: "#e8eef6" },
+      grid: {
+        vertLines: { color: "#1f2a38" },
+        horzLines: { color: "#1f2a38" }
+      },
+      width: document.getElementById(containerId).clientWidth,
+      height: 400
     }
-  });
+  );
 
-  window.addEventListener("resize", () => {
-    chart.applyOptions({ width: container.clientWidth });
+  return chart.addAreaSeries({
+    lineColor: color,
+    topColor: color + "55",
+    bottomColor: color + "08"
   });
-
-  return { chart, series };
 }
 
-async function fetchMetalsSnapshot() {
-  const url = "https://data-asg.goldprice.org/dbXRates/AUD";
-  const res = await fetch(url, { cache: "no-store" });
-
-  if (!res.ok) {
-    throw new Error(`Snapshot fetch failed with status ${res.status}`);
-  }
-
+// ===== FETCH DATA (WORKING ENDPOINT) =====
+async function fetchPrices() {
+  const res = await fetch("https://data-asg.goldprice.org/dbXRates/AUD");
   const data = await res.json();
 
-  if (!data?.items?.length) {
-    throw new Error("Unexpected snapshot format");
-  }
+  const gold = data.items[0].xauPrice;
+  const silver = data.items[0].xagPrice;
 
-  const audItem = data.items.find(
-    item =>
-      String(item?.curr || "").toUpperCase() === "AUD" ||
-      String(item?.currency || "").toUpperCase() === "AUD"
-  ) || data.items[0];
-
-  const gold = Number(audItem.xauPrice);
-  const silver = Number(audItem.xagPrice);
-
-  if (Number.isNaN(gold) || Number.isNaN(silver)) {
-    throw new Error("Gold or silver price missing in snapshot");
-  }
-
-  return {
-    gold,
-    silver,
-    raw: audItem
-  };
+  return { gold, silver };
 }
 
-function makeSyntheticSeries(currentPrice, points = 72, minutesStep = 20) {
-  const now = Date.now();
+// ===== FAKE HISTORY (FOR NOW) =====
+function generateHistory(price) {
+  const now = Math.floor(Date.now() / 1000);
   const data = [];
 
-  for (let i = points - 1; i >= 0; i -= 1) {
-    const timestamp = Math.floor((now - i * minutesStep * 60 * 1000) / 1000);
-
-    const waveOne = Math.sin(i / 5) * 0.0065;
-    const waveTwo = Math.cos(i / 9) * 0.0045;
-    const drift = ((points - i) / points) * 0.0025;
-    const value = currentPrice * (1 - waveOne - waveTwo + drift);
-
+  for (let i = 50; i > 0; i--) {
     data.push({
-      time: timestamp,
-      value: Number(value.toFixed(2))
+      time: now - i * 3600,
+      value: price + Math.sin(i / 5) * 20
     });
-  }
-
-  if (data.length > 0) {
-    data[data.length - 1].value = Number(currentPrice.toFixed(2));
   }
 
   return data;
 }
 
-function updateTopStatus(gold, silver) {
-  if (goldSpotEl) goldSpotEl.textContent = formatAud(gold);
-  if (silverSpotEl) silverSpotEl.textContent = formatAud(silver);
-  if (lastUpdateEl) lastUpdateEl.textContent = formatDateTime(new Date());
-}
+// ===== CAMERAS =====
+function renderCameras(id, cams) {
+  const container = document.getElementById(id);
+  container.innerHTML = "";
 
-function createCameraCard(cam) {
-  const card = document.createElement("div");
-  card.className = "camera-card";
-
-  const title = document.createElement("h3");
-  title.textContent = cam.title || "Camera";
-  card.appendChild(title);
-
-  const wrap = document.createElement("div");
-  wrap.className = "camera-frame-wrap";
-
-  if (cam.youtubeId && String(cam.youtubeId).trim() !== "") {
-    const iframe = document.createElement("iframe");
-    iframe.src = `https://www.youtube.com/embed/${cam.youtubeId}?autoplay=0&mute=1&controls=1&rel=0`;
-    iframe.allow =
-      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-    iframe.allowFullscreen = true;
-    iframe.referrerPolicy = "strict-origin-when-cross-origin";
-    wrap.appendChild(iframe);
-  } else {
-    const placeholder = document.createElement("div");
-    placeholder.style.position = "absolute";
-    placeholder.style.inset = "0";
-    placeholder.style.display = "flex";
-    placeholder.style.alignItems = "center";
-    placeholder.style.justifyContent = "center";
-    placeholder.style.padding = "16px";
-    placeholder.style.textAlign = "center";
-    placeholder.style.color = "#9fb0c4";
-    placeholder.textContent = "Add a YouTube live stream ID in config.js";
-    wrap.appendChild(placeholder);
-  }
-
-  card.appendChild(wrap);
-  return card;
-}
-
-function renderCameras(targetId, cameraList) {
-  const target = document.getElementById(targetId);
-  if (!target) return;
-
-  target.innerHTML = "";
-
-  if (!Array.isArray(cameraList) || cameraList.length === 0) {
-    const empty = document.createElement("div");
-    empty.style.padding = "16px";
-    empty.style.color = "#9fb0c4";
-    empty.textContent = "No cameras configured.";
-    target.appendChild(empty);
-    return;
-  }
-
-  cameraList.forEach(cam => {
-    target.appendChild(createCameraCard(cam));
+  cams.forEach(c => {
+    container.innerHTML += `
+      <div class="camera-card">
+        <h3>${c.title}</h3>
+        <div class="camera-frame-wrap">
+          ${
+            c.youtubeId
+              ? `<iframe src="https://www.youtube.com/embed/${c.youtubeId}" allowfullscreen></iframe>`
+              : `<div style="padding:20px;color:#aaa">Add YouTube ID</div>`
+          }
+        </div>
+      </div>
+    `;
   });
 }
 
-async function loadAndRenderData() {
-  const snapshot = await fetchMetalsSnapshot();
-
-  updateTopStatus(snapshot.gold, snapshot.silver);
-
-  if (goldSeries) {
-    goldSeries.setData(makeSyntheticSeries(snapshot.gold));
-  }
-
-  if (silverSeries) {
-    silverSeries.setData(makeSyntheticSeries(snapshot.silver));
-  }
-}
-
+// ===== INIT =====
 async function init() {
-  setBanner();
+  goldSeries = buildChart("goldChart", "#d4af37");
+  silverSeries = buildChart("silverChart", "#c0c0c0");
 
-  const goldChart = buildChart("goldChart", "#d4af37");
-  const silverChart = buildChart("silverChart", "#c0c0c0");
+  renderCameras("camsAustralia", window.APP_CONFIG.cameras.australia);
+  renderCameras("camsIran", window.APP_CONFIG.cameras.iran);
+  renderCameras("camsUSA", window.APP_CONFIG.cameras.usa);
 
-  goldSeries = goldChart.series;
-  silverSeries = silverChart.series;
+  try {
+    const { gold, silver } = await fetchPrices();
 
-  renderCameras("camsAustralia", window.APP_CONFIG?.cameras?.australia ?? []);
-  renderCameras("camsIran", window.APP_CONFIG?.cameras?.iran ?? []);
-  renderCameras("camsUSA", window.APP_CONFIG?.cameras?.usa ?? []);
+    goldSpotEl.textContent = formatAud(gold);
+    silverSpotEl.textContent = formatAud(silver);
+    lastUpdateEl.textContent = new Date().toLocaleTimeString();
 
-  await loadAndRenderData();
+    goldSeries.setData(generateHistory(gold));
+    silverSeries.setData(generateHistory(silver));
 
-  setInterval(async () => {
-    try {
-      await loadAndRenderData();
-    } catch (error) {
-      console.error(error);
-    }
-  }, REFRESH_MS);
+  } catch (e) {
+    console.error(e);
+    goldSpotEl.textContent = "Error";
+    silverSpotEl.textContent = "Error";
+    lastUpdateEl.textContent = "Check console";
+  }
 }
 
-init().catch(error => {
-  console.error(error);
-  setTopStatusError();
-});
+init();
