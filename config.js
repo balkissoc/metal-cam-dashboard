@@ -12,7 +12,7 @@ window.APP_CONFIG = {
 
     australia: [
       {
-        title: "Perth — Mt Lawley (St John of God Hospital, 24/7)",
+        title: "Perth — Mt Lawley (24/7)",
         type:  "youtube",
         id:    "uakxJIafWcw",
         note:  "Continuous live street view of Mt Lawley, Perth, Western Australia."
@@ -24,10 +24,16 @@ window.APP_CONFIG = {
         note:  "24/7 live view of Bangkok's financial district, Sathorn Road, Thailand."
       },
       {
-        title: "Sydney — 180° Panning Harbour View",
+        title: "Jerusalem — Live Skyline",
         type:  "youtube",
-        id:    "jshwkG1ZpP8",
-        note:  "WebcamSydney 2 — slow 180-degree panning view of Sydney Harbour."
+        id:    "fIurYTprwzg",
+        note:  "Jerusalem Live — continuous skyline view, Israel."
+      },
+      {
+        title: "Washington DC — Live Cam",
+        type:  "youtube",
+        id:    "1wV9lLe14aU",
+        note:  "Axis Communications — live Washington DC camera."
       }
     ],
 
@@ -39,16 +45,16 @@ window.APP_CONFIG = {
         note:  "Real-time HD views from across Tehran and Iran."
       },
       {
-        title: "Jerusalem — Live Skyline",
-        type:  "youtube",
-        id:    "fIurYTprwzg",
-        note:  "Jerusalem Live — continuous skyline view."
-      },
-      {
         title: "Middle East — Multi-Stream",
         type:  "youtube",
         id:    "Khfdb7qUvjk",
         note:  "Multi-source HD feeds from across the Middle East region."
+      },
+      {
+        title: "Sydney — 180° Panning Harbour View",
+        type:  "youtube",
+        id:    "jshwkG1ZpP8",
+        note:  "WebcamSydney 2 — slow 180-degree panning view of Sydney Harbour."
       }
     ],
 
@@ -60,16 +66,16 @@ window.APP_CONFIG = {
         note:  "EarthCam — live view from 1560 Broadway, Times Square."
       },
       {
-        title: "Washington DC — Live Cam",
-        type:  "youtube",
-        id:    "1wV9lLe14aU",
-        note:  "Axis Communications — live Washington DC camera."
-      },
-      {
         title: "Los Angeles — Live Cam",
         type:  "youtube",
         id:    "EO_1LWqsCNE",
         note:  "Venice Beach Hotel live view of Los Angeles."
+      },
+      {
+        title: "NASA — ISS Earth View (Live)",
+        type:  "youtube",
+        id:    "vytmBNhc9ig",
+        note:  "NASA International Space Station live Earth view feed."
       }
     ]
 
