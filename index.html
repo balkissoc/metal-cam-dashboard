@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-AU">
+<html lang="en-AU" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,15 +13,19 @@
       <h1 id="siteTitle">Jimmy's Dashboard</h1>
       <p id="siteSubtitle" class="subtitle">Gold and silver in AUD · Live cameras worldwide</p>
     </div>
+    <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode" aria-label="Toggle light/dark mode">
+      <span class="theme-icon">☀️</span>
+    </button>
   </header>
 
-  <!-- ── News ticker bar ──────────────────────────────────── -->
+  <!-- Scrolling instrument ticker bar -->
   <div class="news-bar">
     <div id="newsTicker"></div>
   </div>
 
   <main class="dashboard">
 
+    <!-- Price ticker cards -->
     <div class="top-cards">
       <div class="card">
         <div class="card-title">Gold (AUD)</div>
@@ -33,6 +37,7 @@
       </div>
     </div>
 
+    <!-- Interactive charts -->
     <div class="chart-row">
       <div class="panel">
         <div class="panel-header"><h2>Gold Price Chart (AUD)</h2></div>
@@ -44,24 +49,31 @@
       </div>
     </div>
 
-    <!-- ── News headlines panel ──────────────────────────── -->
+    <!-- Oil chart — full width -->
+    <div class="panel">
+      <div class="panel-header"><h2>Crude Oil Price Chart (USD)</h2></div>
+      <div id="oilChart" class="widget-tall"></div>
+    </div>
+
+    <!-- Top Headlines -->
     <div class="panel">
       <div class="panel-header"><h2>Top Headlines</h2></div>
       <div id="newsPanel" class="news-panel"></div>
     </div>
 
+    <!-- Camera panels -->
     <div class="panel">
-      <div class="panel-header"><h2>Australia Cameras</h2></div>
+      <div class="panel-header"><h2>Asia-Pacific &amp; Middle East</h2></div>
       <div id="camsAustralia" class="camera-grid"></div>
     </div>
 
     <div class="panel">
-      <div class="panel-header"><h2>Iran &amp; Middle East Cameras</h2></div>
+      <div class="panel-header"><h2>Iran &amp; Middle East</h2></div>
       <div id="camsIran" class="camera-grid"></div>
     </div>
 
     <div class="panel">
-      <div class="panel-header"><h2>USA Cameras</h2></div>
+      <div class="panel-header"><h2>USA</h2></div>
       <div id="camsUSA" class="camera-grid"></div>
     </div>
 
