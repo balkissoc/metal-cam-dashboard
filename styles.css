@@ -1,4 +1,3 @@
-/* ── Design tokens ──────────────────────────────────────── */
 :root {
   --bg:      #071019;
   --panel:   #111d2c;
@@ -33,14 +32,21 @@ html, body {
 .subtitle { margin: 0; color: var(--muted); font-size: 1rem; }
 
 /* ── Layout ─────────────────────────────────────────────── */
-.dashboard { display: flex; flex-direction: column; gap: var(--gap); padding: 20px; }
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  padding: 20px;
+}
 
+/* Tickers — side by side */
 .top-cards {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--gap);
 }
 
+/* Charts — side by side */
 .chart-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -55,35 +61,43 @@ html, body {
   box-shadow: var(--shadow);
   overflow: hidden;
 }
-.card { padding: 14px 14px 10px; }
-.card-title { font-size: .9rem; font-weight: 700; color: var(--muted); margin-bottom: 10px; }
-.panel-header { padding: 14px 16px; background: var(--panel-2); border-bottom: 1px solid var(--border); }
+.card { padding: 0; }
+.panel-header {
+  padding: 14px 16px;
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--border);
+}
 .panel-header h2 { margin: 0; font-size: 1.05rem; }
 
 /* ── Ticker widgets ─────────────────────────────────────── */
-.widget-box { width: 100%; display: block; }
-.widget-short { height: 130px; }
+/*
+  symbol-overview widget needs ~220px to render the mini-chart + price.
+  Give it an explicit height so the widget has something to fill.
+*/
+.widget-short {
+  width: 100%;
+  height: 220px;
+  display: block;
+}
 
 /* ── Chart widgets ──────────────────────────────────────── */
 /*
-  padding-top % creates an intrinsic-height box (70% of width = near square).
-  The TradingView container is positioned absolutely inside to fill it.
-  We read the actual pixel height in app.js and pass it to the widget.
+  Hardcoded 600px height passed to widget config (autosize:false).
+  The container must also be 600px so the widget fills it.
 */
 .widget-tall {
-  position: relative;
   width: 100%;
-  padding-top: 70%;
-}
-.widget-tall .tradingview-widget-container {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  height: 600px;
+  display: block;
 }
 
-.tradingview-widget-container { width: 100%; height: 100%; display: block; }
-.tradingview-widget-container__widget { width: 100%; height: 100%; display: block; }
+/* TradingView containers must fill their host exactly */
+.tradingview-widget-container,
+.tradingview-widget-container__widget {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
 
 /* ── Camera panels ──────────────────────────────────────── */
 .camera-grid {
@@ -105,12 +119,12 @@ html, body {
   border-bottom: 1px solid var(--border);
   background: rgba(255,255,255,0.02);
 }
+/* 16:9 aspect ratio wrapper */
 .camera-frame-wrap {
   position: relative;
   width: 100%;
   padding-top: 56.25%;
   background: #05090e;
-  flex: 1;
 }
 .camera-frame-wrap iframe,
 .camera-frame-wrap .camera-empty {
@@ -127,11 +141,10 @@ html, body {
 .footer { padding: 10px 20px 28px; color: var(--muted); font-size: .85rem; }
 .footer a { color: var(--accent); text-decoration: none; }
 .footer a:hover { text-decoration: underline; }
-code { color: #d7e6ff; background: rgba(255,255,255,0.06); padding: 2px 5px; border-radius: 5px; }
 
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 900px) {
   .top-cards, .chart-row { grid-template-columns: 1fr; }
   .camera-grid { grid-template-columns: 1fr; }
-  .widget-tall { padding-top: 85%; }
+  .widget-tall { height: 400px; }
 }

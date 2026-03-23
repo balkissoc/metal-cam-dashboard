@@ -13,9 +13,8 @@
 
   /* ── TradingView widget injection ────────────────────── */
   /*
-    CRITICAL: use script.innerHTML not script.text
-    TradingView widget scripts read their JSON config from innerHTML.
-    Using .text silently passes no config and the widget renders blank.
+    CRITICAL: script.innerHTML not script.text
+    TradingView widget scripts parse config from their own innerHTML.
   */
   function injectTVWidget(targetId, scriptSrc, config) {
     var target = document.getElementById(targetId);
@@ -25,15 +24,19 @@
 
     var container = document.createElement("div");
     container.className = "tradingview-widget-container";
+    container.style.width  = "100%";
+    container.style.height = "100%";
 
     var widget = document.createElement("div");
     widget.className = "tradingview-widget-container__widget";
+    widget.style.width  = "100%";
+    widget.style.height = "100%";
 
     var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = scriptSrc;
-    script.async = true;
-    script.innerHTML = JSON.stringify(config);  /* NOT .text */
+    script.type    = "text/javascript";
+    script.src     = scriptSrc;
+    script.async   = true;
+    script.innerHTML = JSON.stringify(config);
 
     container.appendChild(widget);
     container.appendChild(script);
@@ -42,49 +45,114 @@
 
   /* ── Market widgets ──────────────────────────────────── */
   function renderMarketWidgets() {
-    /* Price tickers */
+
+    /* --- Tickers: use symbol-overview widget (more reliable than single-quote) --- */
     injectTVWidget(
       "goldTicker",
-      "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js",
-      { symbol: symbols.gold || "OANDA:XAUAUD", width: "100%", isTransparent: true, colorTheme: "dark", locale: "en" }
+      "https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js",
+      {
+        symbols:       [["Gold (AUD)", symbols.gold || "OANDA:XAUAUD|1D"]],
+        chartOnly:     false,
+        width:         "100%",
+        height:        "100%",
+        locale:        "en",
+        colorTheme:    "dark",
+        autosize:      true,
+        showVolume:    false,
+        showMA:        false,
+        hideDateRanges: false,
+        hideMarketStatus: false,
+        hideSymbolLogo: false,
+        scalePosition: "right",
+        scaleMode:     "Normal",
+        fontFamily:    "Arial, sans-serif",
+        fontSize:      "10",
+        noTimeScale:   false,
+        valuesTracking: "1",
+        changeMode:    "price-and-percent",
+        chartType:     "area",
+        lineWidth:     2,
+        lineType:      0,
+        dateRanges:    ["1d|1", "1m|30", "3m|60", "12m|1D", "60m|1W", "all|1M"]
+      }
     );
+
     injectTVWidget(
       "silverTicker",
-      "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js",
-      { symbol: symbols.silver || "OANDA:XAGAUD", width: "100%", isTransparent: true, colorTheme: "dark", locale: "en" }
+      "https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js",
+      {
+        symbols:       [["Silver (AUD)", symbols.silver || "OANDA:XAGAUD|1D"]],
+        chartOnly:     false,
+        width:         "100%",
+        height:        "100%",
+        locale:        "en",
+        colorTheme:    "dark",
+        autosize:      true,
+        showVolume:    false,
+        showMA:        false,
+        hideDateRanges: false,
+        hideMarketStatus: false,
+        hideSymbolLogo: false,
+        scalePosition: "right",
+        scaleMode:     "Normal",
+        fontFamily:    "Arial, sans-serif",
+        fontSize:      "10",
+        noTimeScale:   false,
+        valuesTracking: "1",
+        changeMode:    "price-and-percent",
+        chartType:     "area",
+        lineWidth:     2,
+        lineType:      0,
+        dateRanges:    ["1d|1", "1m|30", "3m|60", "12m|1D", "60m|1W", "all|1M"]
+      }
     );
 
-    /*
-      Charts: defer one requestAnimationFrame so the browser completes layout.
-      The .widget-tall box uses padding-top % for aspect ratio, which means
-      its real pixel height is only available after the first paint.
-      We read it with getBoundingClientRect() then pass it as an explicit
-      height integer to the widget (autosize:false).
-    */
-    requestAnimationFrame(function () {
-      var goldEl  = document.getElementById("goldChart");
-      var silvEl  = document.getElementById("silverChart");
-      var goldH   = goldEl  ? Math.round(goldEl.getBoundingClientRect().height)  : 600;
-      var silvH   = silvEl  ? Math.round(silvEl.getBoundingClientRect().height)  : 600;
-      if (goldH  < 50) goldH  = 600;
-      if (silvH  < 50) silvH  = 600;
+    /* --- Charts: hardcoded 600px height — most reliable cross-browser approach --- */
+    injectTVWidget(
+      "goldChart",
+      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js",
+      {
+        autosize:            false,
+        width:               "100%",
+        height:              600,
+        symbol:              symbols.gold || "OANDA:XAUAUD",
+        interval:            "D",
+        timezone:            "Australia/Perth",
+        theme:               "dark",
+        style:               "1",
+        locale:              "en",
+        backgroundColor:     "rgba(0,0,0,0)",
+        withdateranges:      true,
+        hide_side_toolbar:   false,
+        allow_symbol_change: false,
+        save_image:          false,
+        calendar:            false,
+        support_host:        "https://www.tradingview.com"
+      }
+    );
 
-      var chartBase = {
-        autosize: false, width: "100%",
-        interval: "D", timezone: "Australia/Perth",
-        theme: "dark", style: "1", locale: "en",
-        backgroundColor: "rgba(0,0,0,0)",
-        withdateranges: true, hide_side_toolbar: false,
-        allow_symbol_change: false, save_image: false,
-        calendar: false, support_host: "https://www.tradingview.com"
-      };
-
-      var goldConfig   = Object.assign({}, chartBase, { symbol: symbols.gold   || "OANDA:XAUAUD", height: goldH });
-      var silverConfig = Object.assign({}, chartBase, { symbol: symbols.silver || "OANDA:XAGAUD", height: silvH });
-
-      injectTVWidget("goldChart",   "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js", goldConfig);
-      injectTVWidget("silverChart", "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js", silverConfig);
-    });
+    injectTVWidget(
+      "silverChart",
+      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js",
+      {
+        autosize:            false,
+        width:               "100%",
+        height:              600,
+        symbol:              symbols.silver || "OANDA:XAGAUD",
+        interval:            "D",
+        timezone:            "Australia/Perth",
+        theme:               "dark",
+        style:               "1",
+        locale:              "en",
+        backgroundColor:     "rgba(0,0,0,0)",
+        withdateranges:      true,
+        hide_side_toolbar:   false,
+        allow_symbol_change: false,
+        save_image:          false,
+        calendar:            false,
+        support_host:        "https://www.tradingview.com"
+      }
+    );
   }
 
   /* ── Camera helpers ──────────────────────────────────── */
@@ -94,7 +162,7 @@
     var wrap  = document.createElement("div"); wrap.className = "camera-frame-wrap";
     var empty = document.createElement("div"); empty.className = "camera-empty"; empty.textContent = message;
     var meta  = document.createElement("div"); meta.className = "camera-meta";
-    meta.textContent = "Add a YouTube live stream ID or iframe URL in config.js.";
+    meta.textContent = "Add a YouTube live stream ID in config.js.";
     wrap.appendChild(empty);
     card.appendChild(title);
     card.appendChild(wrap);
