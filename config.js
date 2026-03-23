@@ -1,20 +1,22 @@
 window.APP_CONFIG = {
+  siteTitle: "Jimmy's Dashboard",
+  siteSubtitle: "Gold and silver in AUD, with live cameras in Australia, Iran and the USA",
   refreshMs: 60000,
 
   cameras: {
     australia: [
-      { title: "Australia Camera 1", youtubeId: "LIVE_VIDEO_ID_HERE" },
-      { title: "Australia Camera 2", youtubeId: "LIVE_VIDEO_ID_HERE" },
-      { title: "Australia Camera 3", youtubeId: "LIVE_VIDEO_ID_HERE" }
+      { title: "Sydney Harbour", youtubeId: "" },
+      { title: "Bondi Beach", youtubeId: "" },
+      { title: "Melbourne CBD", youtubeId: "" }
     ],
     iran: [
-      { title: "Iran Camera 1", youtubeId: "LIVE_VIDEO_ID_HERE" },
-      { title: "Iran Camera 2", youtubeId: "LIVE_VIDEO_ID_HERE" }
+      { title: "Tehran", youtubeId: "" },
+      { title: "Iran Camera 2", youtubeId: "" }
     ],
     usa: [
-      { title: "USA Camera 1", youtubeId: "LIVE_VIDEO_ID_HERE" },
-      { title: "USA Camera 2", youtubeId: "LIVE_VIDEO_ID_HERE" },
-      { title: "USA Camera 3", youtubeId: "LIVE_VIDEO_ID_HERE" }
+      { title: "Times Square", youtubeId: "" },
+      { title: "Los Angeles", youtubeId: "" },
+      { title: "Las Vegas", youtubeId: "" }
     ]
   }
 };
