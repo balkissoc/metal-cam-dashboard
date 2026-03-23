@@ -1,112 +1,223 @@
-const goldSpotEl = document.getElementById("goldSpot");
-const silverSpotEl = document.getElementById("silverSpot");
-const lastUpdateEl = document.getElementById("lastUpdate");
+(function () {
+  const app = window.APP_CONFIG || {};
+  const symbols = app.symbols || {};
+  const cameras = app.cameras || {};
 
-let goldSeries;
-let silverSeries;
+  const siteTitleEl = document.getElementById("siteTitle");
+  const siteSubtitleEl = document.getElementById("siteSubtitle");
 
-// ===== FORMAT =====
-function formatAud(value) {
-  return new Intl.NumberFormat("en-AU", {
-    style: "currency",
-    currency: "AUD"
-  }).format(value);
-}
+  if (siteTitleEl && app.siteTitle) {
+    siteTitleEl.textContent = app.siteTitle;
+  }
 
-// ===== CHART =====
-function buildChart(containerId, color) {
-  const chart = LightweightCharts.createChart(
-    document.getElementById(containerId),
-    {
-      layout: { background: { color: "#121923" }, textColor: "#e8eef6" },
-      grid: {
-        vertLines: { color: "#1f2a38" },
-        horzLines: { color: "#1f2a38" }
-      },
-      width: document.getElementById(containerId).clientWidth,
-      height: 400
+  if (siteSubtitleEl && app.siteSubtitle) {
+    siteSubtitleEl.textContent = app.siteSubtitle;
+  }
+
+  function injectTradingViewWidget(targetId, scriptSrc, config) {
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    target.innerHTML = "";
+
+    const container = document.createElement("div");
+    container.className = "tradingview-widget-container";
+
+    const widget = document.createElement("div");
+    widget.className = "tradingview-widget-container__widget";
+
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = scriptSrc;
+    script.async = true;
+    script.text = JSON.stringify(config);
+
+    container.appendChild(widget);
+    container.appendChild(script);
+    target.appendChild(container);
+  }
+
+  function renderMarketWidgets() {
+    injectTradingViewWidget(
+      "goldTicker",
+      "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js",
+      {
+        symbol: symbols.gold || "OANDA:XAUAUD",
+        width: "100%",
+        isTransparent: true,
+        colorTheme: "dark",
+        locale: "en"
+      }
+    );
+
+    injectTradingViewWidget(
+      "silverTicker",
+      "https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js",
+      {
+        symbol: symbols.silver || "OANDA:XAGAUD",
+        width: "100%",
+        isTransparent: true,
+        colorTheme: "dark",
+        locale: "en"
+      }
+    );
+
+    injectTradingViewWidget(
+      "goldChart",
+      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js",
+      {
+        autosize: true,
+        symbol: symbols.gold || "OANDA:XAUAUD",
+        interval: "D",
+        timezone: "Australia/Perth",
+        theme: "dark",
+        style: "1",
+        locale: "en",
+        backgroundColor: "rgba(0, 0, 0, 0)",
+        withdateranges: true,
+        hide_side_toolbar: false,
+        allow_symbol_change: false,
+        save_image: false,
+        calendar: false,
+        support_host: "https://www.tradingview.com"
+      }
+    );
+
+    injectTradingViewWidget(
+      "silverChart",
+      "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js",
+      {
+        autosize: true,
+        symbol: symbols.silver || "OANDA:XAGAUD",
+        interval: "D",
+        timezone: "Australia/Perth",
+        theme: "dark",
+        style: "1",
+        locale: "en",
+        backgroundColor: "rgba(0, 0, 0, 0)",
+        withdateranges: true,
+        hide_side_toolbar: false,
+        allow_symbol_change: false,
+        save_image: false,
+        calendar: false,
+        support_host: "https://www.tradingview.com"
+      }
+    );
+  }
+
+  function buildEmptyCameraCard(message) {
+    const card = document.createElement("div");
+    card.className = "camera-card";
+
+    const title = document.createElement("h3");
+    title.textContent = "No camera configured";
+
+    const wrap = document.createElement("div");
+    wrap.className = "camera-frame-wrap";
+
+    const empty = document.createElement("div");
+    empty.className = "camera-empty";
+    empty.textContent = message;
+
+    wrap.appendChild(empty);
+    card.appendChild(title);
+    card.appendChild(wrap);
+
+    const meta = document.createElement("div");
+    meta.className = "camera-meta";
+    meta.textContent = "Add a tested embeddable YouTube live stream or iframe URL in config.js.";
+    card.appendChild(meta);
+
+    return card;
+  }
+
+  function buildCameraCard(camera) {
+    const card = document.createElement("div");
+    card.className = "camera-card";
+
+    const title = document.createElement("h3");
+    title.textContent = camera.title || "Camera";
+    card.appendChild(title);
+
+    const wrap = document.createElement("div");
+    wrap.className = "camera-frame-wrap";
+
+    let iframe = null;
+
+    if (camera.type === "youtube" && camera.id) {
+      iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube.com/embed/${camera.id}?autoplay=0&mute=1&controls=1&rel=0`;
+      iframe.allow =
+        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      iframe.allowFullscreen = true;
+      iframe.loading = "lazy";
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
+    } else if (camera.type === "iframe" && camera.src) {
+      iframe = document.createElement("iframe");
+      iframe.src = camera.src;
+      iframe.allowFullscreen = true;
+      iframe.loading = "lazy";
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
     }
-  );
 
-  return chart.addAreaSeries({
-    lineColor: color,
-    topColor: color + "55",
-    bottomColor: color + "08"
-  });
-}
+    if (iframe) {
+      wrap.appendChild(iframe);
+    } else {
+      const empty = document.createElement("div");
+      empty.className = "camera-empty";
+      empty.textContent = "This camera entry is incomplete. Add a valid source in config.js.";
+      wrap.appendChild(empty);
+    }
 
-// ===== FETCH DATA (WORKING ENDPOINT) =====
-async function fetchPrices() {
-  const res = await fetch("https://data-asg.goldprice.org/dbXRates/AUD");
-  const data = await res.json();
+    card.appendChild(wrap);
 
-  const gold = data.items[0].xauPrice;
-  const silver = data.items[0].xagPrice;
+    const meta = document.createElement("div");
+    meta.className = "camera-meta";
+    meta.textContent =
+      camera.note ||
+      "Use only sources that you have manually tested and confirmed can be embedded.";
+    card.appendChild(meta);
 
-  return { gold, silver };
-}
+    return card;
+  }
 
-// ===== FAKE HISTORY (FOR NOW) =====
-function generateHistory(price) {
-  const now = Math.floor(Date.now() / 1000);
-  const data = [];
+  function renderCameraGroup(targetId, list, fallbackMessage) {
+    const target = document.getElementById(targetId);
+    if (!target) return;
 
-  for (let i = 50; i > 0; i--) {
-    data.push({
-      time: now - i * 3600,
-      value: price + Math.sin(i / 5) * 20
+    target.innerHTML = "";
+
+    if (!Array.isArray(list) || list.length === 0) {
+      target.appendChild(buildEmptyCameraCard(fallbackMessage));
+      return;
+    }
+
+    list.forEach((camera) => {
+      target.appendChild(buildCameraCard(camera));
     });
   }
 
-  return data;
-}
+  function init() {
+    renderMarketWidgets();
 
-// ===== CAMERAS =====
-function renderCameras(id, cams) {
-  const container = document.getElementById(id);
-  container.innerHTML = "";
+    renderCameraGroup(
+      "camsAustralia",
+      cameras.australia,
+      "No Australia cameras have been configured yet."
+    );
 
-  cams.forEach(c => {
-    container.innerHTML += `
-      <div class="camera-card">
-        <h3>${c.title}</h3>
-        <div class="camera-frame-wrap">
-          ${
-            c.youtubeId
-              ? `<iframe src="https://www.youtube.com/embed/${c.youtubeId}" allowfullscreen></iframe>`
-              : `<div style="padding:20px;color:#aaa">Add YouTube ID</div>`
-          }
-        </div>
-      </div>
-    `;
-  });
-}
+    renderCameraGroup(
+      "camsIran",
+      cameras.iran,
+      "No Iran cameras have been configured yet."
+    );
 
-// ===== INIT =====
-async function init() {
-  goldSeries = buildChart("goldChart", "#d4af37");
-  silverSeries = buildChart("silverChart", "#c0c0c0");
-
-  renderCameras("camsAustralia", window.APP_CONFIG.cameras.australia);
-  renderCameras("camsIran", window.APP_CONFIG.cameras.iran);
-  renderCameras("camsUSA", window.APP_CONFIG.cameras.usa);
-
-  try {
-    const { gold, silver } = await fetchPrices();
-
-    goldSpotEl.textContent = formatAud(gold);
-    silverSpotEl.textContent = formatAud(silver);
-    lastUpdateEl.textContent = new Date().toLocaleTimeString();
-
-    goldSeries.setData(generateHistory(gold));
-    silverSeries.setData(generateHistory(silver));
-
-  } catch (e) {
-    console.error(e);
-    goldSpotEl.textContent = "Error";
-    silverSpotEl.textContent = "Error";
-    lastUpdateEl.textContent = "Check console";
+    renderCameraGroup(
+      "camsUSA",
+      cameras.usa,
+      "No USA cameras have been configured yet."
+    );
   }
-}
 
-init();
+  init();
+})();
